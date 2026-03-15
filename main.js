@@ -95,10 +95,10 @@
   let prevMouse      = { x: 0, y: 0 };
   /* Compute initial orbit params from camera position so applyOrbitCamera
      produces the exact same coordinates — avoids a camera snap on reset.  */
-  const _initDist = Math.sqrt(120 * 120 + 280 * 280);          // ≈ 304.6
-  let orbitAngles    = { theta: 0, phi: Math.asin(120 / _initDist) };
-  let orbitDist      = _initDist;
-  const TARGET_DIST_DEFAULT = _initDist;
+  const INITIAL_ORBIT_DIST = Math.sqrt(120 * 120 + 280 * 280); // ≈ 304.6
+  let orbitAngles    = { theta: 0, phi: Math.asin(120 / INITIAL_ORBIT_DIST) };
+  let orbitDist      = INITIAL_ORBIT_DIST;
+  const TARGET_DIST_DEFAULT = INITIAL_ORBIT_DIST;
   let orbitTarget    = new THREE.Vector3(0, 0, 0);
   let camVelocity    = { theta: 0, phi: 0 };
 
