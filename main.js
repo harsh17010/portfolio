@@ -93,9 +93,12 @@
   /* Camera drag state */
   let isDragging     = false;
   let prevMouse      = { x: 0, y: 0 };
-  let orbitAngles    = { theta: 0, phi: 0.4 };  // spherical coords
-  let orbitDist      = 280;
-  const TARGET_DIST_DEFAULT = 280;
+  /* Compute initial orbit params from camera position so applyOrbitCamera
+     produces the exact same coordinates — avoids a camera snap on reset.  */
+  const _initDist = Math.sqrt(120 * 120 + 280 * 280);          // ≈ 304.6
+  let orbitAngles    = { theta: 0, phi: Math.asin(120 / _initDist) };
+  let orbitDist      = _initDist;
+  const TARGET_DIST_DEFAULT = _initDist;
   let orbitTarget    = new THREE.Vector3(0, 0, 0);
   let camVelocity    = { theta: 0, phi: 0 };
 
@@ -512,6 +515,9 @@
   }
 
   function onClick(e) {
+    // Ignore clicks while focused on a planet or during camera animation
+    if (isFocused || isAnimatingCamera) return;
+
     // Small move threshold — ignore drags
     if (Math.abs(e.clientX - prevMouse.x) > 5 || Math.abs(e.clientY - prevMouse.y) > 5) return;
 
@@ -599,6 +605,7 @@
     closeContentPanel();
     backBtn.classList.add('hidden');
     navHint.classList.remove('hidden');
+    camVelocity = { theta: 0, phi: 0 };
 
     gsap.to(camera.position, {
       x: 0, y: 120, z: 280,
@@ -607,8 +614,13 @@
       onUpdate: () => { camera.lookAt(0, 0, 0); orbitTarget.set(0, 0, 0); },
       onComplete: () => {
         isAnimatingCamera = false;
-        orbitAngles = { theta: 0, phi: 0.4 };
-        orbitDist   = TARGET_DIST_DEFAULT;
+        // Derive orbit params from the camera so applyOrbitCamera doesn't snap
+        const d = camera.position.length();
+        orbitAngles = {
+          theta: Math.atan2(camera.position.x, camera.position.z),
+          phi:   Math.asin(camera.position.y / d)
+        };
+        orbitDist = d;
       }
     });
   }
@@ -732,13 +744,14 @@
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup',   onMouseUp);
     window.addEventListener('click',     onClick);
-    window.addEventListener('wheel', onWheel);
+    window.addEventListener('wheel', onWheel, { passive: false });
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchmove',  onTouchMove,  { passive: true });
     window.addEventListener('touchend',   onTouchEnd,   { passive: true });
 
-    backBtn.addEventListener('click',  resetCamera);
-    closePanel.addEventListener('click', () => {
+    backBtn.addEventListener('click',  (e) => { e.stopPropagation(); resetCamera(); });
+    closePanel.addEventListener('click', (e) => {
+      e.stopPropagation();
       closeContentPanel();
       resetCamera();
     });
