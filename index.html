@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Space Portfolio — Solar System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader-inner">
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+      <p class="loader-text">Initializing Solar System…</p>
+    </div>
+  </div>
+
+  <!-- Three.js Canvas -->
+  <canvas id="solar-canvas"></canvas>
+
+  <!-- HUD: Navigation hint -->
+  <div id="nav-hint">
+    <span>🖱 Drag to rotate &nbsp;|&nbsp; Scroll to zoom &nbsp;|&nbsp; Click a planet to explore</span>
+  </div>
+
+  <!-- Planet Name Tooltip -->
+  <div id="planet-tooltip"></div>
+
+  <!-- Back Button -->
+  <button id="back-btn" class="hidden">← Back to System</button>
+
+  <!-- Content Panel (glassmorphism) -->
+  <div id="content-panel" class="hidden">
+    <button id="close-panel">✕</button>
+    <div id="panel-content"></div>
+  </div>
+
+  <!-- Section Data (hidden) -->
+  <template id="section-home">
+    <div class="section-home">
+      <h1>👋 Hello, I'm <span class="highlight">Your Name</span></h1>
+      <p class="subtitle">Full-Stack Developer &amp; Creative Technologist</p>
+      <p>I craft immersive digital experiences that live at the intersection of engineering and art. Welcome to my solar system — explore each planet to learn more about me.</p>
+      <div class="tags">
+        <span>JavaScript</span><span>Three.js</span><span>React</span><span>Node.js</span><span>WebGL</span>
+      </div>
+    </div>
+  </template>
+
+  <template id="section-mercury">
+    <div class="section-resume">
+      <h2>📄 Resume</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="year">2022 – Present</span>
+          <h3>Senior Frontend Developer</h3>
+          <p>Tech Corp Inc. — Led 3D web visualization projects using Three.js and WebGL.</p>
+        </div>
+        <div class="timeline-item">
+          <span class="year">2020 – 2022</span>
+          <h3>Full-Stack Engineer</h3>
+          <p>StartupXYZ — Built scalable APIs and responsive UIs for 50k+ users.</p>
+        </div>
+        <div class="timeline-item">
+          <span class="year">2016 – 2020</span>
+          <h3>B.Tech Computer Science</h3>
+          <p>University of Technology — GPA 3.9 / 4.0, Dean's List.</p>
+        </div>
+      </div>
+      <a class="btn-download" href="#" download>⬇ Download PDF Resume</a>
+    </div>
+  </template>
+
+  <template id="section-venus">
+    <div class="section-skills">
+      <h2>⚡ Skills</h2>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <h3>Frontend</h3>
+          <div class="skill-bar"><span>JavaScript</span><div class="bar"><div style="width:95%"></div></div></div>
+          <div class="skill-bar"><span>React / Next.js</span><div class="bar"><div style="width:90%"></div></div></div>
+          <div class="skill-bar"><span>Three.js / WebGL</span><div class="bar"><div style="width:85%"></div></div></div>
+          <div class="skill-bar"><span>CSS / Tailwind</span><div class="bar"><div style="width:90%"></div></div></div>
+        </div>
+        <div class="skill-group">
+          <h3>Backend</h3>
+          <div class="skill-bar"><span>Node.js</span><div class="bar"><div style="width:88%"></div></div></div>
+          <div class="skill-bar"><span>Python / Django</span><div class="bar"><div style="width:80%"></div></div></div>
+          <div class="skill-bar"><span>PostgreSQL</span><div class="bar"><div style="width:82%"></div></div></div>
+          <div class="skill-bar"><span>Docker / K8s</span><div class="bar"><div style="width:75%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="section-earth">
+    <div class="section-about">
+      <h2>🌍 About Me</h2>
+      <div class="about-grid">
+        <div class="avatar-wrap">
+          <div class="avatar-placeholder">👤</div>
+        </div>
+        <div>
+          <p>I'm a passionate developer who loves building products that are both technically excellent and visually stunning. Born in India, I've worked with teams across 3 continents and contributed to open-source projects with 10k+ GitHub stars.</p>
+          <p>When I'm not coding, you'll find me stargazing, sketching UI concepts, or playing chess. I believe the best software is a blend of science, art, and empathy.</p>
+          <ul class="about-facts">
+            <li>🌏 Based in Bengaluru, India</li>
+            <li>☕ Powered by coffee &amp; curiosity</li>
+            <li>🔭 Amateur Astronomer</li>
+            <li>🎸 Guitar Enthusiast</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="section-mars">
+    <div class="section-projects">
+      <h2>🚀 Projects</h2>
+      <div class="projects-grid">
+        <div class="project-card">
+          <h3>🌌 AstroViz</h3>
+          <p>Real-time 3D astronomy visualization using NASA APIs and Three.js.</p>
+          <div class="project-tags"><span>Three.js</span><span>NASA API</span><span>React</span></div>
+          <a href="#" class="project-link">View →</a>
+        </div>
+        <div class="project-card">
+          <h3>🤖 AI Chat Interface</h3>
+          <p>GPT-4 powered chat UI with voice, image, and code-execution capabilities.</p>
+          <div class="project-tags"><span>OpenAI</span><span>Next.js</span><span>WebSockets</span></div>
+          <a href="#" class="project-link">View →</a>
+        </div>
+        <div class="project-card">
+          <h3>📊 DataFlow Dashboard</h3>
+          <p>Live analytics dashboard handling 1M events/day with WebGL-accelerated charts.</p>
+          <div class="project-tags"><span>D3.js</span><span>WebGL</span><span>Node.js</span></div>
+          <a href="#" class="project-link">View →</a>
+        </div>
+        <div class="project-card">
+          <h3>🎮 Pixel Engine</h3>
+          <p>A 2D game engine written in TypeScript with ECS architecture.</p>
+          <div class="project-tags"><span>TypeScript</span><span>Canvas API</span><span>ECS</span></div>
+          <a href="#" class="project-link">View →</a>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="section-jupiter">
+    <div class="section-major">
+      <h2>🏆 Major Projects</h2>
+      <div class="major-project">
+        <h3>🌐 OpenCloud Platform</h3>
+        <p>Built a multi-tenant SaaS infrastructure handling 500k+ monthly active users. Reduced infrastructure costs by 40% through intelligent auto-scaling.</p>
+        <div class="stats-row">
+          <div class="stat"><span>500k+</span><label>MAU</label></div>
+          <div class="stat"><span>40%</span><label>Cost Saved</label></div>
+          <div class="stat"><span>99.99%</span><label>Uptime</label></div>
+        </div>
+        <div class="project-tags"><span>Kubernetes</span><span>Terraform</span><span>Go</span><span>React</span></div>
+      </div>
+      <div class="major-project">
+        <h3>🧠 Neural Style Transfer App</h3>
+        <p>Web app that applies artistic styles to photos in real-time using TensorFlow.js, reaching 200k downloads.</p>
+        <div class="stats-row">
+          <div class="stat"><span>200k</span><label>Downloads</label></div>
+          <div class="stat"><span>4.8★</span><label>Rating</label></div>
+          <div class="stat"><span>&lt;2s</span><label>Inference</label></div>
+        </div>
+        <div class="project-tags"><span>TensorFlow.js</span><span>WebGL</span><span>Vue.js</span></div>
+      </div>
+    </div>
+  </template>
+
+  <template id="section-saturn">
+    <div class="section-certs">
+      <h2>🎓 Certifications</h2>
+      <div class="certs-list">
+        <div class="cert-item">
+          <div class="cert-badge">☁</div>
+          <div>
+            <h3>AWS Solutions Architect Professional</h3>
+            <p>Amazon Web Services · 2023</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-badge">🔵</div>
+          <div>
+            <h3>Google Cloud Professional Developer</h3>
+            <p>Google · 2022</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-badge">⚙</div>
+          <div>
+            <h3>Certified Kubernetes Administrator</h3>
+            <p>CNCF · 2022</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-badge">🤖</div>
+          <div>
+            <h3>TensorFlow Developer Certificate</h3>
+            <p>Google / TensorFlow · 2021</p>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-badge">⚛</div>
+          <div>
+            <h3>Meta React Developer Certificate</h3>
+            <p>Meta / Coursera · 2021</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="section-neptune">
+    <div class="section-contact">
+      <h2>✉ Contact</h2>
+      <p>Have an idea, opportunity, or just want to say hello? I'd love to hear from you.</p>
+      <form id="contact-form" onsubmit="handleContactForm(event)">
+        <div class="form-group">
+          <input type="text" placeholder="Your Name" required />
+        </div>
+        <div class="form-group">
+          <input type="email" placeholder="Your Email" required />
+        </div>
+        <div class="form-group">
+          <textarea placeholder="Your Message" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn-send">Send Message 🚀</button>
+        <p class="form-note">* This is a demo form. Connect a backend or service like Formspree to enable real submissions.</p>
+      </form>
+      <div class="social-links">
+        <a href="#" title="GitHub">GitHub</a>
+        <a href="#" title="LinkedIn">LinkedIn</a>
+        <a href="#" title="Twitter">Twitter</a>
+        <a href="#" title="Email">Email</a>
+      </div>
+    </div>
+  </template>
+
+  <!-- Scripts -->
+  <script src="vendor/three.min.js"></script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
